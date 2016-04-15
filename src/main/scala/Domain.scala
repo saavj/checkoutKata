@@ -4,13 +4,16 @@ package com.saacole.checkoutkata
   */
 case class SKUNotFound(sku: String, message: String) 		extends Exception(message)
 case class ParsingError(offer: String, message: String) extends Exception(message)
+case class InvalidPrice(price: BigDecimal, message: String) extends Exception(message)
 
 /** Pricing 
 	* 
 	* Prices always come with a unit price - modelled as a BigDecimal for accuracy.
 	* Prices may come with a special price - modelled as a String. 
   */
-case class Prices(unitPrice: BigDecimal, specialPrice: Option[String] = None)
+case class Prices(unitPrice: BigDecimal, specialPrice: Option[String] = None) {
+  require(unitPrice >= 0, throw InvalidPrice(unitPrice, "Invalid price - Cannot be a negative value"))
+}
 
 /** Offers 
 	* 

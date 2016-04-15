@@ -1,7 +1,5 @@
 package com.saacole.checkoutkata
 
-import scala.util.Try
-
 object Main extends App {
 	println(  
   s"""

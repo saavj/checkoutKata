@@ -1,6 +1,6 @@
 package com.saacole.checkoutkata
 
-import scala.util.{Try, Failure, Success}
+import scala.util.{Success, Try}
 
 class Checkout(priceRules: Map[String, Prices]) {
 

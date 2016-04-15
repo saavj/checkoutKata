@@ -18,6 +18,21 @@ class CheckoutSpec extends FlatSpec {
     val emptyRuleTransaction = new Checkout(Map())
   }
 
+  "Checkout" should "produce an error when negative prices are used" in new TestTransactionData {
+
+    // Given
+    val sku         = "A"
+    val quantity    = 1
+
+    // When
+    val price       = -50
+
+    // Then
+    the [Exception] thrownBy {
+      new Checkout(Map(sku -> Prices(price)))
+    } should have message "Invalid price - Cannot be a negative value"
+  }
+
   "scanItem" should "return price if sku is available" in new TestTransactionData {
 
     // Given
