@@ -30,7 +30,7 @@ class CheckoutSpec extends FlatSpec {
     // Then
     the [Exception] thrownBy {
       new Checkout(Map(sku -> Prices(price)))
-    } should have message "Invalid price - Cannot be a negative value"
+    } should have message s"Invalid price $price - Cannot be a negative value"
   }
 
   "scanItem" should "return price if sku is available" in new TestTransactionData {
@@ -55,7 +55,7 @@ class CheckoutSpec extends FlatSpec {
     // Then 
     the [Exception] thrownBy {        
       emptyRuleTransaction.scanItem(unknownSku, 1)
-    } should have message ("SKU not found")
+    } should have message s"SKU $unknownSku not found"
   }
 
   "scanItems" should "return a list of prices" in new TestTransactionData {
@@ -83,7 +83,7 @@ class CheckoutSpec extends FlatSpec {
     // Then 
     the [Exception] thrownBy {        
       emptyRuleTransaction.scanItems(List(unknownSku))
-    } should have message ("SKU not found")
+    } should have message s"SKU $unknownSku not found"
   }
 
   "calcTotal" should "sum a list of prices" in new TestTransactionData {
@@ -145,6 +145,6 @@ class CheckoutSpec extends FlatSpec {
     // Then 
     the [Exception] thrownBy {        
       multiRuleTransaction.calcSpecialPrice(unitPrice, offer, quantity) 
-    } should have message ("Cannot read offer. Read documentation for correct format")
+    } should have message s"Cannot read offer '$offer'. Read documentation for correct format"
   }
 }

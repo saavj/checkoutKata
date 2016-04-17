@@ -2,9 +2,9 @@ package com.saacole.checkoutkata
 
 /** Error Handling 
   */
-case class SKUNotFound(sku: String, message: String) 		extends Exception(message)
-case class ParsingError(offer: String, message: String) extends Exception(message)
-case class InvalidPrice(price: BigDecimal, message: String) extends Exception(message)
+case class SKUNotFound(message: String)  extends Exception(message)
+case class ParsingError(message: String) extends Exception(message)
+case class InvalidPrice(message: String) extends Exception(message)
 
 /** Pricing 
 	* 
@@ -12,7 +12,7 @@ case class InvalidPrice(price: BigDecimal, message: String) extends Exception(me
 	* Prices may come with a special price - modelled as a String. 
   */
 case class Prices(unitPrice: BigDecimal, specialPrice: Option[String] = None) {
-  require(unitPrice >= 0, throw InvalidPrice(unitPrice, "Invalid price - Cannot be a negative value"))
+  require(unitPrice >= 0, throw InvalidPrice(s"Invalid price $unitPrice - Cannot be a negative value"))
 }
 
 /** Offers 

@@ -13,7 +13,7 @@ class Checkout(priceRules: Map[String, Prices]) {
 	def scanItem(sku: String, quantity: Int): BigDecimal = priceRules get sku match {
 		case Some(Prices(price 		, None			 )) => price
 		case Some(Prices(unitPrice, Some(offer))) => calcSpecialPrice(unitPrice, offer, quantity)
-		case None				 													=> throw SKUNotFound(sku, "SKU not found")
+		case None				 													=> throw SKUNotFound(s"SKU $sku not found")
 	}
 
 	/** Scanning items
@@ -63,7 +63,7 @@ class Checkout(priceRules: Map[String, Prices]) {
 		val strings = offer.split(" ")
 		(Try(strings(0).toInt), Try(BigDecimal(strings(2)))) match {
 			case (Success(x), Success(y)) => Offer(x, y)
-			case _ => throw ParsingError(offer, "Cannot read offer. Read documentation for correct format")
+			case _ => throw ParsingError(s"Cannot read offer '$offer'. Read documentation for correct format")
 		}
 	}
 }
