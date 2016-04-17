@@ -10,7 +10,7 @@ class CheckoutSpec extends FlatSpec {
     // Given
     val unknownSku           = "unknown"
 
-    val skus                 = List("B", "C", "D", "C")
+    val skus                 = List("B", "C", "D")
     val prices               = List(BigDecimal(10), BigDecimal(20), BigDecimal(30))
     val priceRules           = (skus zip prices.map(p => Prices(p))).toMap
 
@@ -45,7 +45,20 @@ class CheckoutSpec extends FlatSpec {
   	val actualPrice = transaction.scanItem(sku, quantity)
     
     // Then 
-    actualPrice === price
+    actualPrice should === (50)
+  }
+
+  it should "return correct price for multiple skus (without offers)" in new TestTransactionData {
+
+    // Given C costs 20 (as it is in the multiRuleTransaction we are using)
+    // 2 C's should cost 40
+
+    // When
+    val actualPrice = multiRuleTransaction.scanItem("C", 2)
+
+    // Then
+
+    actualPrice should === (BigDecimal(40))
   }
 
   it should "produce SKUNotFound when sku doesn't exist in pricing rules" in new TestTransactionData {
@@ -64,7 +77,7 @@ class CheckoutSpec extends FlatSpec {
     val actualPrices = multiRuleTransaction.scanItems(skus)
     
     // Then 
-    actualPrices === prices
+    actualPrices should contain theSameElementsAs (prices)
   }
 
   it should "return an empty list for an empty list (not error)" in new TestTransactionData {
@@ -73,7 +86,7 @@ class CheckoutSpec extends FlatSpec {
     val actualPrices = emptyRuleTransaction.scanItems(List())
     
     // Then   
-    actualPrices === List()   
+    actualPrices should === (List())
   }
 
   it should "produce SKUNotFound when sku doesn't exist in pricing rules" in new TestTransactionData {
@@ -92,7 +105,7 @@ class CheckoutSpec extends FlatSpec {
     val actualTotal = multiRuleTransaction.calcTotal(prices) 
     
     // Then 
-    actualTotal === 60
+    actualTotal should === (60)
   }
 
   it should "return 0 for empty list" in new TestTransactionData {
@@ -101,7 +114,7 @@ class CheckoutSpec extends FlatSpec {
     val actualTotal = emptyRuleTransaction.calcTotal(List()) 
     
     // Then 
-    actualTotal === 0
+    actualTotal should === (0)
   }
 
 
@@ -116,7 +129,7 @@ class CheckoutSpec extends FlatSpec {
     val specialPrice = multiRuleTransaction.calcSpecialPrice(unitPrice, offer, quantity) 
     
     // Then 
-    specialPrice === 130
+    specialPrice should === (130)
   }
 
   it should "return a total cost for a quantity that is more than the offer " in new TestTransactionData {
@@ -130,14 +143,14 @@ class CheckoutSpec extends FlatSpec {
     val specialPrice = multiRuleTransaction.calcSpecialPrice(unitPrice, offer, quantity) 
     
     // Then 
-    specialPrice === 75
+    specialPrice should === (75)
   }
 
-  it should "produce ParsingError when offer is not in acceptable format" in new TestTransactionData {
+  it should "produce ParsingError when offer is not in acceptable format (extra words)" in new TestTransactionData {
 
     // Given
-    val offer    = "2 items for 45"
-    val quantity = 3
+    val offer     = "2 items for 45"
+    val quantity  = 3
     val unitPrice = BigDecimal(30)
 
     // When we use the above format that isn't in expected format
@@ -145,6 +158,21 @@ class CheckoutSpec extends FlatSpec {
     // Then 
     the [Exception] thrownBy {        
       multiRuleTransaction.calcSpecialPrice(unitPrice, offer, quantity) 
+    } should have message s"Cannot read offer '$offer'. Read documentation for correct format"
+  }
+
+  it should "produce ParsingError when offer is not in acceptable format (quantity is 0)" in new TestTransactionData {
+
+    // Given
+    val offer     = "0 for 45"
+    val quantity  = 3
+    val unitPrice = BigDecimal(30)
+
+    // When we use the above format that isn't in expected format
+
+    // Then
+    the [Exception] thrownBy {
+      multiRuleTransaction.calcSpecialPrice(unitPrice, offer, quantity)
     } should have message s"Cannot read offer '$offer'. Read documentation for correct format"
   }
 }

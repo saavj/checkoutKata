@@ -4,19 +4,21 @@ To run  - "sbt run"
 To test - "sbt test"
 
 Commands are as follows:
-
--add [SKU] - To add an item / items to your basket
-             Seperate sku's with a space
-             e.g. "add A B C"
-
--price     - Adds up the current contents of
-            your basket
-
--clear     - Clears you basket
-
--list      - Lists all the items in your basket
-
--quit      - Leaves the current checkout transaction
+__________________________________________________________
+|                                                         |
+| - add [SKU] - To add an item / items to your basket     |
+|              Seperate sku's with a space                |
+|              e.g. "add A B C"                           |
+|                                                         |
+| - price     - Adds up the current contents of           |
+|              your basket                                |
+|                                                         |
+| - clear     - Clears you basket                         |
+|                                                         |
+| - list      - Lists all the items in your basket        |
+|                                                         |
+| - quit      - Leaves the current checkout transaction   |
+___________________________________________________________
 
 Implement the code for a supermarket checkout that calculates the total price of a number of items. 
 In a normal supermarket, things are identified using Stock Keeping Units, or SKUs. In our store, 
@@ -40,5 +42,5 @@ Please note: Offers can only be accepted in the format shown above in the exampl
 	
 		[ quantity ] "for" [ price ]
 
-quantity to be a whole number
+quantity to be a whole number that is bigger than 0
 price to be a positive integer - will accept decimals
